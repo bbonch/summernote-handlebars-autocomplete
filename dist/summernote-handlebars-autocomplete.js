@@ -3735,27 +3735,33 @@ var ENTER_KEY_CODE = 13;
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-  } else if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && module.exports) {
-    module.exports = factory(require("jquery"));
+  } else if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module.exports) {
+    module.exports = factory(require('jquery'));
   } else {
     factory(window.jQuery);
   }
 })(function ($) {
   $.extend($.summernote.plugins, {
-    summernoteAtMention: function summernoteAtMention(context) {
+    summernoteHandlebarsAutocomplete: function summernoteHandlebarsAutocomplete(context) {
       var _this = this;
 
       /************************
        * Setup instance vars. *
        ************************/
       this.editableEl = context.layoutInfo.editable[0];
-      this.editorEl = context.layoutInfo.editor[0];
+      // this.editorEl = context.layoutInfo.editor[0];
 
-      this.autocompleteAnchor = { left: null, top: null };
+      this.autocompleteAnchor = {
+        left: null,
+        top: null
+      };
       this.autocompleteContainer = null;
       this.showingAutocomplete = false;
       this.selectedIndex = null;
       this.suggestions = null;
+      this.hoverColor = '#1e90ff';
+      this.backgroundColor = '#e4e4e4';
+      this.fontSize = '12px';
 
       this.getSuggestions = function (_) {
         return [];
@@ -3764,15 +3770,27 @@ var ENTER_KEY_CODE = 13;
       /********************
        * Read-in options. *
        ********************/
-      if (context.options && context.options.callbacks && context.options.callbacks.summernoteAtMention) {
-        var summernoteCallbacks = context.options.callbacks.summernoteAtMention;
+      if (context.options && context.options && context.options.summernoteHandlebarsAutocomplete) {
+        var summernoteOptions = context.options.summernoteHandlebarsAutocomplete;
 
-        if (summernoteCallbacks.getSuggestions) {
-          this.getSuggestions = summernoteCallbacks.getSuggestions;
+        if (summernoteOptions.getSuggestions) {
+          this.getSuggestions = summernoteOptions.getSuggestions;
         }
 
-        if (summernoteCallbacks.onSelect) {
-          this.onSelect = summernoteCallbacks.onSelect;
+        if (summernoteOptions.onSelect) {
+          this.onSelect = summernoteOptions.onSelect;
+        }
+
+        if (summernoteOptions.hoverColor) {
+          this.hoverColor = summernoteOptions.hoverColor;
+        }
+
+        if (summernoteOptions.backgroundColor) {
+          this.backgroundColor = summernoteOptions.backgroundColor;
+        }
+
+        if (summernoteOptions.fontSize) {
+          this.fontSize = summernoteOptions.fontSize;
         }
       }
 
@@ -3780,10 +3798,12 @@ var ENTER_KEY_CODE = 13;
        * Events *
        **********/
       this.events = {
-        "summernote.blur": function summernoteBlur() {
-          if (_this.showingAutocomplete) _this.hideAutocomplete();
+        'summernote.blur': function summernoteBlur() {
+          if (_this.showingAutocomplete) {
+            _this.hideAutocomplete();
+          }
         },
-        "summernote.keydown": function summernoteKeydown(_, event) {
+        'summernote.keydown': function summernoteKeydown(_, event) {
           if (_this.showingAutocomplete) {
             switch (event.keyCode) {
               case ENTER_KEY_CODE:
@@ -3813,24 +3833,25 @@ var ENTER_KEY_CODE = 13;
             }
           }
         },
-        "summernote.keyup": function summernoteKeyup(_, event) {
+        'summernote.keyup': function summernoteKeyup(_, event) {
           var selection = document.getSelection();
           var currentText = selection.anchorNode.nodeValue;
 
-          var _findWordAndIndices = _this.findWordAndIndices(currentText || "", selection.anchorOffset),
+          var _findWordAndIndices = _this.findWordAndIndices(currentText || '', selection.anchorOffset),
               word = _findWordAndIndices.word,
               absoluteIndex = _findWordAndIndices.absoluteIndex;
 
-          var trimmedWord = word.slice(1);
+          var trimmedWord = word.slice(2);
 
           if (_this.showingAutocomplete && ![DOWN_KEY_CODE, UP_KEY_CODE, ENTER_KEY_CODE].includes(event.keyCode)) {
-            if (word[0] === "@") {
+
+            if (word[0] === '{' && word[1] === '{') {
               var suggestions = _this.getSuggestions(trimmedWord);
               _this.updateAutocomplete(suggestions, _this.selectedIndex);
             } else {
               _this.hideAutocomplete();
             }
-          } else if (!_this.showingAutocomplete && word[0] === "@") {
+          } else if (!_this.showingAutocomplete && word[0] === '{' && word[1] === '{') {
             _this.suggestions = _this.getSuggestions(trimmedWord);
             _this.selectedIndex = 0;
             _this.showAutocomplete(absoluteIndex, selection.anchorNode);
@@ -3844,6 +3865,7 @@ var ENTER_KEY_CODE = 13;
 
       this.handleEnter = function () {
         _this.handleSelection();
+        _this.hideAutocomplete();
       };
 
       this.handleClick = function (suggestion) {
@@ -3852,7 +3874,7 @@ var ENTER_KEY_CODE = 13;
         });
 
         if (selectedIndex === -1) {
-          throw new Error("Unable to find suggestion in suggestions.");
+          throw new Error('Unable to find suggestion in suggestions.');
         }
 
         _this.selectedIndex = selectedIndex;
@@ -3864,7 +3886,7 @@ var ENTER_KEY_CODE = 13;
           return;
         }
 
-        var newWord = _this.suggestions[_this.selectedIndex];
+        var newWord = _this.suggestions[_this.selectedIndex].value;
 
         if (_this.onSelect !== undefined) {
           _this.onSelect(newWord);
@@ -3874,19 +3896,19 @@ var ENTER_KEY_CODE = 13;
         var selection = document.getSelection();
         var currentText = selection.anchorNode.nodeValue;
 
-        var _findWordAndIndices2 = _this.findWordAndIndices(currentText || "", selection.anchorOffset),
+        var _findWordAndIndices2 = _this.findWordAndIndices(currentText || '', selection.anchorOffset),
             word = _findWordAndIndices2.word,
             absoluteIndex = _findWordAndIndices2.absoluteIndex;
 
         var selectionPreserver = new _selectionPreserver2.default(_this.editableEl);
         selectionPreserver.preserve();
 
-        selection.anchorNode.textContent = currentText.slice(0, absoluteIndex + 1) + newWord + " " + currentText.slice(absoluteIndex + word.length);
+        selection.anchorNode.textContent = currentText.slice(0, absoluteIndex + 2) + newWord + currentText.slice(absoluteIndex + word.length) + '}} ';
 
-        selectionPreserver.restore(absoluteIndex + newWord.length + 1);
+        selectionPreserver.restore(absoluteIndex + newWord.length + 4);
 
-        if (context.options.callbacks.onChange !== undefined) {
-          context.options.callbacks.onChange(_this.editableEl.innerHTML);
+        if (context.options.onChange !== undefined) {
+          context.options.onChange(_this.editableEl.innerHTML);
         }
       };
 
@@ -3898,7 +3920,7 @@ var ENTER_KEY_CODE = 13;
 
       this.showAutocomplete = function (atTextIndex, indexAnchor) {
         if (_this.showingAutocomplete) {
-          throw new Error("Cannot call showAutocomplete if autocomplete is already showing.");
+          throw new Error('Cannot call showAutocomplete if autocomplete is already showing.');
         }
         _this.setAutocompleteAnchor(atTextIndex, indexAnchor);
         _this.renderAutocompleteContainer();
@@ -3907,46 +3929,47 @@ var ENTER_KEY_CODE = 13;
       };
 
       this.renderAutocompleteContainer = function () {
-        _this.autocompleteContainer = document.createElement("div");
-        _this.autocompleteContainer.style.top = String(_this.autocompleteAnchor.top) + "px";
-        _this.autocompleteContainer.style.left = String(_this.autocompleteAnchor.left) + "px";
-        _this.autocompleteContainer.style.position = "absolute";
-        _this.autocompleteContainer.style.backgroundColor = "#e4e4e4";
+        _this.autocompleteContainer = document.createElement('div');
+        _this.autocompleteContainer.style.top = String(_this.autocompleteAnchor.top) + 'px';
+        _this.autocompleteContainer.style.left = String(_this.autocompleteAnchor.left) + 'px';
+        _this.autocompleteContainer.style.position = 'absolute';
+        _this.autocompleteContainer.style.backgroundColor = _this.backgroundColor;
         _this.autocompleteContainer.style.zIndex = Number.MAX_SAFE_INTEGER;
-
+        _this.autocompleteContainer.style.fontSize = _this.fontSize;
         document.body.appendChild(_this.autocompleteContainer);
       };
 
       this.renderAutocomplete = function () {
         if (_this.autocompleteContainer === null) {
-          throw new Error("Cannot call renderAutocomplete without an autocompleteContainer. ");
+          throw new Error('Cannot call renderAutocomplete without an autocompleteContainer. ');
         }
-        var autocompleteContent = document.createElement("div");
+        var autocompleteContent = document.createElement('div');
 
         _this.suggestions.forEach(function (suggestion, idx) {
-          var suggestionDiv = document.createElement("div");
-          suggestionDiv.textContent = suggestion;
-
-          suggestionDiv.style.padding = "5px 10px";
+          var suggestionDiv = document.createElement('div');
+          suggestionDiv.textContent = suggestion.display;
+          suggestionDiv.style.padding = '8px 20px';
 
           if (_this.selectedIndex === idx) {
-            suggestionDiv.style.backgroundColor = "#2e6da4";
-            suggestionDiv.style.color = "white";
+            suggestionDiv.style.backgroundColor = _this.hoverColor;
+            suggestionDiv.style.color = 'white';
           }
 
-          suggestionDiv.addEventListener("mousedown", function () {
+          suggestionDiv.addEventListener('mousedown', function () {
             _this.handleClick(suggestion);
           });
 
           autocompleteContent.appendChild(suggestionDiv);
         });
 
-        _this.autocompleteContainer.innerHTML = "";
+        _this.autocompleteContainer.innerHTML = '';
         _this.autocompleteContainer.appendChild(autocompleteContent);
       };
 
       this.hideAutocomplete = function () {
-        if (!_this.showingAutocomplete) throw new Error("Cannot call hideAutocomplete if autocomplete is not showing.");
+        if (!_this.showingAutocomplete) {
+          throw new Error('Cannot call hideAutocomplete if autocomplete is not showing.');
+        }
 
         document.body.removeChild(_this.autocompleteContainer);
         _this.autocompleteAnchor = { left: null, top: null };
@@ -3957,10 +3980,10 @@ var ENTER_KEY_CODE = 13;
 
       this.findWordAndIndices = function (text, offset) {
         if (offset > text.length) {
-          return { word: "", relativeIndex: 0 };
+          return { word: '', relativeIndex: 2 };
         } else {
-          var leftWord = "";
-          var rightWord = "";
+          var leftWord = '';
+          var rightWord = '';
           var relativeIndex = 0;
           var absoluteIndex = offset;
 
@@ -3996,31 +4019,31 @@ var ENTER_KEY_CODE = 13;
 
         var atIndex = -1;
         for (var i = 0; i <= atTextIndex; i++) {
-          if (text[i] === "@") {
-            atIndex++;
+          if (text[i] === '{' && text[i + 1] === '{') {
+            atIndex = atIndex + 2;
           }
         }
 
         var htmlIndex = void 0;
         for (var _i = 0, htmlAtIndex = 0; _i < html.length; _i++) {
-          if (html[_i] === "@") {
+          if (html[_i] === '{' && html[_i + 1] === '{') {
             if (htmlAtIndex === atIndex) {
-              htmlIndex = _i;
+              htmlIndex = _i + 1;
               break;
             } else {
-              htmlAtIndex++;
+              htmlAtIndex = htmlAtIndex + 1;
             }
           }
         }
 
-        var atNodeId = "at-node-" + String(Math.floor(Math.random() * 10000));
-        var spanString = "<span id=\"" + atNodeId + "\">@</span>";
+        var atNodeId = 'at-node-' + String(Math.floor(Math.random() * 10000));
+        var spanString = '<span id="' + atNodeId + '">{{</span>';
 
         var selectionPreserver = new _selectionPreserver2.default(_this.editableEl);
         selectionPreserver.preserve();
 
-        indexAnchor.parentNode.innerHTML = html.slice(0, htmlIndex) + spanString + html.slice(htmlIndex + 1);
-        var anchorElement = document.querySelector("#" + atNodeId);
+        indexAnchor.parentNode.innerHTML = html.slice(0, htmlIndex) + spanString + html.slice(htmlIndex + 2);
+        var anchorElement = document.querySelector('#' + atNodeId);
         var anchorBoundingRect = anchorElement.getBoundingClientRect();
 
         _this.autocompleteAnchor = {

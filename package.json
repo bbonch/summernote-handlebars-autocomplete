@@ -1,9 +1,9 @@
 {
-  "name": "summernote-at-mention",
+  "name": "summernote-handlebars-autocomplete",
   "version": "1.0.0",
-  "description": "@mention plugin for summernote with support for autocomplete.",
-  "repository": "git@github.com:team-loxo/summernote-at-mention.git",
-  "author": "Juan Sebastian Angarita",
+  "description": "Handlebars autocomplete plugin for summernote",
+  "repository": "git@github.com:ruiluntran/summernote-handlebars-autocomplete.git",
+  "author": "Rui Lun Tran <ruiluntran.com>",
   "license": "MIT",
   "scripts": {
     "build": "./node_modules/.bin/webpack"

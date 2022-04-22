@@ -3,10 +3,10 @@ const path = require('path');
 
 module.exports = (env) => {
   return {
-    entry: path.resolve(__dirname, 'src', 'summernote-at-mention.js'),
+    entry: path.resolve(__dirname, 'src', 'summernote-handlebars-autocomplete.js'),
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.js'
+      filename: 'summernote-handlebars-autocomplete.js'
     },
     module: {
       rules: [
@@ -14,16 +14,16 @@ module.exports = (env) => {
           test: /\.js$/,
           include: [path.resolve(__dirname, 'src')],
           exclude: [path.resolve(__dirname, 'node_modules')],
-          loaders: ['babel-loader'],
+          loaders: ['babel-loader']
         },
       ]
     },
     resolve: {
       modules: ['node_modules'],
-      extensions: ['.js'],
+      extensions: ['.js']
     },
     externals: {
-      jquery: '$',
-    },
+      jquery: '$'
+    }
   };
 };
