@@ -18,7 +18,7 @@ const ENTER_KEY_CODE = 13;
   }
 })(function ($) {
   $.extend($.summernote.plugins, {
-    summernoteHandlebarsAutocomplete: function (context) {
+    handlebarsAutocomplete: function (context) {
       /************************
        * Setup instance vars. *
        ************************/
@@ -44,8 +44,8 @@ const ENTER_KEY_CODE = 13;
       /********************
        * Read-in options. *
        ********************/
-      if (context.options && context.options && context.options.summernoteHandlebarsAutocomplete) {
-        const summernoteOptions = context.options.summernoteHandlebarsAutocomplete;
+      if (context.options && context.options && context.options.handlebarsAutocomplete) {
+        const summernoteOptions = context.options.handlebarsAutocomplete;
 
         if (summernoteOptions.getSuggestions) {
           this.getSuggestions = summernoteOptions.getSuggestions;

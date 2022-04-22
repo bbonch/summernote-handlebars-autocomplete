@@ -3742,7 +3742,7 @@ var ENTER_KEY_CODE = 13;
   }
 })(function ($) {
   $.extend($.summernote.plugins, {
-    summernoteHandlebarsAutocomplete: function summernoteHandlebarsAutocomplete(context) {
+    handlebarsAutocomplete: function handlebarsAutocomplete(context) {
       var _this = this;
 
       /************************
@@ -3770,8 +3770,8 @@ var ENTER_KEY_CODE = 13;
       /********************
        * Read-in options. *
        ********************/
-      if (context.options && context.options && context.options.summernoteHandlebarsAutocomplete) {
-        var summernoteOptions = context.options.summernoteHandlebarsAutocomplete;
+      if (context.options && context.options && context.options.handlebarsAutocomplete) {
+        var summernoteOptions = context.options.handlebarsAutocomplete;
 
         if (summernoteOptions.getSuggestions) {
           this.getSuggestions = summernoteOptions.getSuggestions;

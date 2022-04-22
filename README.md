@@ -1,41 +1,53 @@
-# Summernote @mention plugin
-## Usage
-1. Include the `bundle.js` file in your javascript.
-2. In the `callbacks` option passed to Summernote, include the configuration object.
+# Summernote Handlebars Autocomplete plugin
 
-## Configuration Object
-The configuration object that should be passed into the `callbacks` option to Summernote has the following structure:
+Summernote handlebars autocomplete plugin for [summernote](https://github.com/summernote/summernote/).
 
-```javascript
-{
-  getSuggestions: (value) => ['Array of strings'],
-  onSelect: (value) => {},
-}
+## Installation
+
+Include the required files and the plugin file after summernote.min.js file.
+
+``` html
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css"/>
+        
+<div id="summernote"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
+<script src="../dist/summernote-handlebars-autocomplete.js"></script>
 ```
-This object should be passed via the `summernoteAtMention` key within the `callbacks` option passed to Summernote.
 
-The first function `getSuggestions` takes in a string via the `value` argument and should return a list of strings that will be presented as options to the user.
+## Configuration
 
-The second function `onSelect` gets called once a user selects an option using the `ENTER` key. It is passed the selected value via the `value` argument. If no such function is provided, the default behavior is to fill in the the text after the `@` sign with the selected option.
+To configure the plugin, pass in the options object with the key: `handlebarsAutocomplete` to summernote.
 
-## Example
+
+### Example
 
 ```javascript
 $('#summernote').summernote({
   placeholder: 'Placeholder',
-  toolbar: [['style', ['style']]],
-  callbacks: {
-    summernoteAtMention: {
-      getSuggestions: = (value) => {
-        const userEmails = ['cecilia@email.co', 'pedro@email.co'];
-        return userEmails.filter((email) => {
-          return sample.includes(value) && sample !== value
-        });
-      },
-    },
-  },
-})
+  handlebarsAutocomplete: {
+    getSuggestions: (value) => {
+      const suggestions = [
+        {
+          display: 'userName',
+          value: 'ruiluntran'
+        },
+        {
+          display: 'ensDomain',
+          value: 'ruiluntran.eth'
+        }
+      ];
+      return suggestions.filter(suggestion => {
+        return suggestion.display.includes(value);
+      });
+    }
+  }
+});
 ```
 
-## Contributing
-All ideas and contributions are welcome! Please use the `Issues` tab.
+## License
+
+The contents of this repository is licensed under [The MIT License.](https://opensource.org/licenses/MIT)
