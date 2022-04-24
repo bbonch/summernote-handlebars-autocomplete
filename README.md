@@ -2,6 +2,10 @@
 
 Summernote handlebars autocomplete plugin for [summernote](https://github.com/summernote/summernote/).
 
+## Demo
+
+https://summernote-handlebars-autocomplete.ruiluntran.com/
+
 ## Installation
 
 Include the required files and the plugin file after summernote.min.js file.
@@ -47,6 +51,10 @@ $('#summernote').summernote({
   }
 });
 ```
+
+## Credits
+
+Forked from https://github.com/team-loxo/summernote-at-mention
 
 ## License
 
