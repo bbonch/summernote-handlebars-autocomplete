@@ -6,7 +6,7 @@
   "author": "Rui Lun Tran <ruiluntran.com>",
   "license": "MIT",
   "scripts": {
-    "build": "./node_modules/.bin/webpack"
+    "build": "webpack"
   },
   "dependencies": {
     "babel-cli": "6.26.0",

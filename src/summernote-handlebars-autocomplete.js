@@ -55,15 +55,15 @@ const ENTER_KEY_CODE = 13;
           this.onSelect = summernoteOptions.onSelect;
         }
 
-        if(summernoteOptions.hoverColor){
+        if (summernoteOptions.hoverColor) {
           this.hoverColor = summernoteOptions.hoverColor;
         }
 
-        if(summernoteOptions.backgroundColor){
+        if (summernoteOptions.backgroundColor) {
           this.backgroundColor = summernoteOptions.backgroundColor;
         }
 
-        if(summernoteOptions.fontSize){
+        if (summernoteOptions.fontSize) {
           this.fontSize = summernoteOptions.fontSize;
         }
 
@@ -112,7 +112,7 @@ const ENTER_KEY_CODE = 13;
         'summernote.keyup': (_, event) => {
           const selection = document.getSelection();
           const currentText = selection.anchorNode.nodeValue;
-          const {word, absoluteIndex} = this.findWordAndIndices(currentText || '', selection.anchorOffset);
+          const { word, absoluteIndex } = this.findWordAndIndices(currentText || '', selection.anchorOffset);
           const trimmedWord = word.slice(2);
 
           if (this.showingAutocomplete && ![DOWN_KEY_CODE, UP_KEY_CODE, ENTER_KEY_CODE].includes(event.keyCode)) {
@@ -165,7 +165,7 @@ const ENTER_KEY_CODE = 13;
 
         const selection = document.getSelection();
         const currentText = selection.anchorNode.nodeValue;
-        const {word, absoluteIndex} = this.findWordAndIndices(currentText || '', selection.anchorOffset);
+        const { word, absoluteIndex } = this.findWordAndIndices(currentText || '', selection.anchorOffset);
 
         const selectionPreserver = new SelectionPreserver(this.editableEl);
         selectionPreserver.preserve();
@@ -239,7 +239,7 @@ const ENTER_KEY_CODE = 13;
         }
 
         document.body.removeChild(this.autocompleteContainer);
-        this.autocompleteAnchor = {left: null, top: null};
+        this.autocompleteAnchor = { left: null, top: null };
         this.selectedIndex = null;
         this.suggestions = null;
         this.showingAutocomplete = false;
@@ -247,7 +247,7 @@ const ENTER_KEY_CODE = 13;
 
       this.findWordAndIndices = (text, offset) => {
         if (offset > text.length) {
-          return {word: '', relativeIndex: 2};
+          return { word: '', relativeIndex: 2 };
         } else {
           let leftWord = '';
           let rightWord = '';
@@ -314,7 +314,7 @@ const ENTER_KEY_CODE = 13;
         const anchorBoundingRect = anchorElement.getBoundingClientRect();
 
         this.autocompleteAnchor = {
-          top: anchorBoundingRect.top + anchorBoundingRect.height + 2,
+          top: window.scrollY + anchorBoundingRect.top + anchorBoundingRect.height + 2,
           left: anchorBoundingRect.left
         };
 
